@@ -22,3 +22,5 @@ erl_crash.dump
 # Ignore package tarball (built via "mix hex.build").
 devops_skills_matrix-*.tar
 
+# output file
+output.json
