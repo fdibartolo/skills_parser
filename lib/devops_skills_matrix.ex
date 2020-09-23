@@ -1,5 +1,9 @@
 defmodule DevopsSkillsMatrix do
-  defp parse() do
-    
+  def process, do: process(File.cwd)
+  def process({:ok, path}), do: process(path)
+
+  def process(path) do
+    path
+    |> Utils.get_files
   end
 end
