@@ -12,10 +12,10 @@ defmodule DevopsSkillsMatrixTest do
       assert DevopsSkillsMatrix.parse([], Map.new) == %{}
     end
 
-    test "should parse files recursively" do
-      files = ["f1", "f2", "f3"]
-      result = DevopsSkillsMatrix.parse(files, Map.new)
-      assert result |> Map.keys == files
+    test "should parse files recursively with cols data" do
+      result = DevopsSkillsMatrix.parse(["./test/data/test.xlsx"], Map.new)
+      assert result |> Map.keys |> Enum.count == 1
+      assert result |> Map.values |> List.first |> Enum.count == 4
     end
   end
 end
