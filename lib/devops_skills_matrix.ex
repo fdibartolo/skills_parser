@@ -6,4 +6,6 @@ defmodule DevopsSkillsMatrix do
     path
     |> Utils.get_files
   end
+
+  def parse([]), do: {}
 end
