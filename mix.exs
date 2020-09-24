@@ -22,7 +22,8 @@ defmodule DevopsSkillsMatrix.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:xlsxir, "~> 1.6.4"}
+      {:xlsxir, "~> 1.6.4"},
+      {:poison, "~> 3.1"}
     ]
   end
 end

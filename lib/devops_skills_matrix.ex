@@ -9,6 +9,8 @@ defmodule DevopsSkillsMatrix do
     path
     |> Utils.get_files
     |> parse(Map.new)
+    |> Poison.encode!
+    |> Utils.create_output_file
   end
 
   def parse([], acc), do: acc
