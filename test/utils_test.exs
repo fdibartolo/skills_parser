@@ -26,4 +26,16 @@ defmodule UtilsTest do
       assert File.read("./output.json") == {:ok, content}
     end
   end
+
+  describe "purge skills list" do
+    test "should remove blanks" do
+      assert Utils.purge(["a,1", "", " ", "b,2"]) == ["a,1", "b,2"]
+    end
+    test "should remove dashes" do
+      assert Utils.purge(["a,1", "-", " ", "b,2"]) == ["a,1", "b,2"]
+    end
+    test "should accept only 'tech,experience'" do
+      assert Utils.purge(["a,1", "c,", ",2", "b", "x,y,3"]) == ["a,1", "x,y,3"]
+    end
+  end
 end

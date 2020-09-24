@@ -10,4 +10,11 @@ defmodule Utils do
   end
 
   def create_output_file(content), do: File.write(@output_file, content)
+
+  def purge(list) do
+    list
+    |> Enum.map(fn s -> String.trim s end)
+    |> Enum.reject(fn s -> s == "" end)
+    |> Enum.reject(fn s -> !String.match?(s, ~r/.,\d/) end)
+  end
 end
