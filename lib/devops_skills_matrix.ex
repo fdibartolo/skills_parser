@@ -1,6 +1,7 @@
 defmodule DevopsSkillsMatrix do
-  @eid_cell "A1"
-  @skills_col "C"
+  @sheet_number 1
+  @eid_cell "C5"
+  @skills_col "M"
 
   def process, do: process(File.cwd)
   def process({:ok, path}), do: process(path)
@@ -19,7 +20,7 @@ defmodule DevopsSkillsMatrix do
   end
 
   defp parse(file) do
-    {:ok, spreadsheet} = Xlsxir.extract(file, 0)
+    {:ok, spreadsheet} = Xlsxir.extract(file, @sheet_number)
     name = Xlsxir.get_cell(spreadsheet, @eid_cell)
     skills = Xlsxir.get_col(spreadsheet, @skills_col)
     Map.new([{name, skills}])
