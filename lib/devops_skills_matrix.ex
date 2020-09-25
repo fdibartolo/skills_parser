@@ -25,4 +25,10 @@ defmodule DevopsSkillsMatrix do
     skills = Xlsxir.get_col(spreadsheet, @skills_col)
     Map.new([{name, skills}])
   end
+
+  def split_tech_and_expertise(skills) do
+    skills
+    |> Enum.map(fn f -> Map.new([{String.slice(f, 0..-3), String.slice(f, -1..-1)
+      |> String.to_integer }]) end)
+  end
 end

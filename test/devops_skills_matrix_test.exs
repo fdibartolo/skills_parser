@@ -18,4 +18,10 @@ defmodule DevopsSkillsMatrixTest do
       assert result |> Map.values |> List.first |> Enum.count == 4
     end
   end
+
+  describe "transform into tools and experience level" do
+    test "should split tool from expertise" do
+      assert DevopsSkillsMatrix.split_tech_and_expertise(["a(b,c),2", "d,3", "e,4,5"]) == [%{"a(b,c)" => 2}, %{"d" => 3}, %{"e,4" => 5}]
+    end
+  end
 end
