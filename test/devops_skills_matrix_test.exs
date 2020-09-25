@@ -9,13 +9,22 @@ defmodule DevopsSkillsMatrixTest do
   
   describe "parse" do
     test "should return empty json when no files to parse" do
-      assert DevopsSkillsMatrix.parse([], Map.new) == %{}
+      assert DevopsSkillsMatrix.parse([], []) == []
     end
 
-    test "should parse files recursively with cols data" do
-      result = DevopsSkillsMatrix.parse(["./test/data/file.xlsx"], Map.new)
-      assert result |> Map.keys |> Enum.count == 1
-      assert result |> Map.values |> List.first |> Enum.count == 4
+    test "should parse files recursively" do
+      result = DevopsSkillsMatrix.parse(["./test/data/file.xlsx"], [])
+      assert result |> Enum.count == 1
+    end
+
+    test "should include map with proper key names" do
+      result = DevopsSkillsMatrix.parse(["./test/data/file.xlsx"], []) |> List.first
+      assert result |> Map.keys == [:name, :skills]
+    end
+
+    test "should include map with proper count of skill values" do
+      result = DevopsSkillsMatrix.parse(["./test/data/file.xlsx"], []) |> List.first
+      assert result |> Map.get(:skills) |> Enum.count == 4
     end
   end
 
