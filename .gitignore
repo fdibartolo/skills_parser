@@ -27,3 +27,6 @@ devops_skills_matrix-*.tar
 
 # output file
 output.json
+
+# local osx files
+.DS_store
