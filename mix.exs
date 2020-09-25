@@ -15,7 +15,6 @@ defmodule DevopsSkillsMatrix.MixProject do
   def application do
     [
       extra_applications: [:logger]
-      # [applications: [:xlsxir]]
     ]
   end
 
