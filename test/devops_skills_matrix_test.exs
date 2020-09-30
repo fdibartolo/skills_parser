@@ -30,7 +30,13 @@ defmodule DevopsSkillsMatrixTest do
 
   describe "transform into tools and experience level" do
     test "should split tool from expertise" do
-      assert DevopsSkillsMatrix.split_tech_and_expertise(["a(b,c),2", "d,3", "e,4,5"]) == [%{"a(b,c)" => 2}, %{"d" => 3}, %{"e,4" => 5}]
+      assert DevopsSkillsMatrix.split_tech_and_expertise(["d","3"]) == %{"d" => 3}
+    end
+    test "should handle multiple commas" do
+      assert DevopsSkillsMatrix.split_tech_and_expertise(["a(b","c)","2"]) == %{"a(b,c)" => 2}
+    end
+    test "should handle multiple numbers" do
+      assert DevopsSkillsMatrix.split_tech_and_expertise(["e","4","5"]) == %{"e,4" => 5}
     end
   end
 
