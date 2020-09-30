@@ -19,12 +19,12 @@ defmodule DevopsSkillsMatrixTest do
 
     test "should include map with proper key names" do
       result = DevopsSkillsMatrix.parse(["./test/data/file.xlsx"], []) |> List.first
-      assert result |> Map.keys == [:name, :skills]
+      assert result |> Map.keys == [:areas, :name]
     end
 
     test "should include map with proper count of skill values" do
       result = DevopsSkillsMatrix.parse(["./test/data/file.xlsx"], []) |> List.first
-      assert result |> Map.get(:skills) |> Enum.count == 4
+      assert result |> Map.get(:areas) |> Enum.count == 4
     end
   end
 

@@ -22,10 +22,10 @@ defmodule DevopsSkillsMatrix do
   defp parse(file) do
     {:ok, spreadsheet} = Xlsxir.extract(file, @sheet_number)
     name = Xlsxir.get_cell(spreadsheet, @eid_cell)
-    skills = Xlsxir.get_col(spreadsheet, @skills_col)
+    skills_by_area = Xlsxir.get_col(spreadsheet, @skills_col)
       |> Utils.purge
-      |> split_tech_and_expertise
-    Map.new(name: name, skills: skills)
+      |> split_areas
+    Map.new(name: name, areas: skills_by_area)
   end
 
   def split_areas(skills), do: split_areas(skills, [])
