@@ -33,4 +33,16 @@ defmodule DevopsSkillsMatrix do
     |> Enum.map(fn f -> Map.new([{String.slice(f, 0..-3), String.slice(f, -1..-1)
       |> String.to_integer }]) end)
   end
+
+  def split_areas(skills), do: split_areas(skills, [])
+  defp split_areas([], acc), do: acc
+  defp split_areas([skill|skills], acc) do
+    [a|t] = skill |> String.split(",")
+    area = Enum.find(acc, fn f -> f.area == a end)
+    tech = t |> Enum.join(",")
+    case area do
+      nil -> split_areas(skills, acc ++ [Map.new(area: a, skills: [tech])])
+      _ -> split_areas(skills, [area |> Map.update!(:skills, &(&1 ++ [tech]))])
+    end
+  end
 end
