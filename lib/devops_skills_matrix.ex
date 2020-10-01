@@ -40,13 +40,9 @@ defmodule DevopsSkillsMatrix do
     end
   end
 
-  def split_tech_and_expertise(skills) do
-    %{
-      skills |> Enum.drop(-1) |> Enum.join(",") => 
-      skills |> Enum.at(-1) |> String.to_integer
-    }
-  end
+  def split_tech_and_expertise(skills), do: %{ skills |> Enum.drop(-1) |> Enum.join(",") => 
+    skills |> Enum.at(-1) |> String.to_integer }
 
-  def merge_skills(acc, a, t), do: Enum.reject(acc, fn f -> f.area == a.area end) ++ 
+  defp merge_skills(acc, a, t), do: Enum.reject(acc, fn f -> f.area == a.area end) ++ 
     [a |> Map.update!(:skills, &(&1 ++ [t]))]
 end
