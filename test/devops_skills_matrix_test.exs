@@ -47,9 +47,11 @@ defmodule DevopsSkillsMatrixTest do
       ]
     end
     test "should handle multiple areas" do
-      assert DevopsSkillsMatrix.split_areas(["area1,tech1,1","area1,tech2,1","area2,tech3,4"]) == [
+      assert DevopsSkillsMatrix.split_areas(["area1,tech1,1","area1,tech2,1","area2,tech3,4","area2,tech5,4","area3,tech6,2","area4,tech7,1"]) == [
         %{area: "area1", skills: [%{"tech1" => 1}, %{"tech2" => 1}]},
-        %{area: "area2", skills: [%{"tech3" => 4}]}
+        %{area: "area2", skills: [%{"tech3" => 4}, %{"tech5" => 4}]},
+        %{area: "area3", skills: [%{"tech6" => 2}]},
+        %{area: "area4", skills: [%{"tech7" => 1}]}
       ]
     end
   end

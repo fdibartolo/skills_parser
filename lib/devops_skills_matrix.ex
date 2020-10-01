@@ -36,7 +36,7 @@ defmodule DevopsSkillsMatrix do
     tech = t |> split_tech_and_expertise
     case area do
       nil -> split_areas(skills, acc ++ [Map.new(area: a, skills: [tech])])
-      _ -> split_areas(skills, [area |> Map.update!(:skills, &(&1 ++ [tech]))])
+      _ -> split_areas(skills, merge_skills(acc, area, tech))
     end
   end
 
@@ -46,4 +46,7 @@ defmodule DevopsSkillsMatrix do
       skills |> Enum.at(-1) |> String.to_integer
     }
   end
+
+  def merge_skills(acc, a, t), do: Enum.reject(acc, fn f -> f.area == a.area end) ++ 
+    [a |> Map.update!(:skills, &(&1 ++ [t]))]
 end
