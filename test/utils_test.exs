@@ -16,13 +16,13 @@ defmodule UtilsTest do
 
   describe "create output file" do
     test "should create file" do
-      Utils.create_output_file("")
+      Utils.create_file("", "output.json")
       assert File.exists? "./output.json"
     end
 
     test "should save file content" do
       content = "foo bar"
-      Utils.create_output_file(content)
+      Utils.create_file(content, "output.json")
       assert File.read("./output.json") == {:ok, content}
     end
   end

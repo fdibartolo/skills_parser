@@ -1,6 +1,4 @@
 defmodule Utils do
-  @output_file "./output.json"
-
   def get_files(path, extension \\ ".xlsx") do
     path 
     |> File.ls
@@ -9,7 +7,7 @@ defmodule Utils do
     |> Enum.map(fn f -> Path.join(path, f) end)
   end
 
-  def create_output_file(content), do: File.write(@output_file, content)
+  def create_file(content, name), do: File.write(name, content)
 
   def purge(list) do
     list
