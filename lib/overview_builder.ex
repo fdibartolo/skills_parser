@@ -1,25 +1,24 @@
 defmodule OverviewBuilder do
   @valid_areas_and_skills %{
-    "SourceControl" => ["Git", "Mercurial", "SVN", "CVS"],
-    "Development" => [".Net", "Java", "Javascript/NodeJS", "Ruby", "Python"],
-    "Scripting" => ["Bash", "Powershell", "Ruby", "Python"],
-    "IaC" => ["Ansible", "CloudFormation", "Chef", "Terraform", "Puppet"],
     "Containers" => ["Docker / Docker Swarm", "Openshift", "Kubernetes (standalone)", "AWS ecosystem (ECS, EKS, Fargate)", "Google Cloud ecosystem (Registry, GKE)", "Azure ecosystem (AKS, Service Fabric)"],
-    "Orchestrators" => ["Jenkins", "Azure DevOps pipelines", "AWS stack (CodeBuild, CodePipeline, CodeDeploy)", "Google Cloud Build", "Spinnaker", "TeamCity"]
+    "Development" => [".Net", "Java", "Javascript/NodeJS", "Ruby", "Python"],
+    "IaC" => ["Ansible", "CloudFormation", "Chef", "Terraform", "Puppet"],
+    "Orchestrators" => ["Jenkins", "Azure DevOps pipelines", "AWS stack (CodeBuild, CodePipeline, CodeDeploy)", "Google Cloud Build", "Spinnaker", "TeamCity"],
+    "Scripting" => ["Bash", "Powershell", "Ruby", "Python"],
+    "SourceControl" => ["Git", "Mercurial", "SVN", "CVS"]
   }
 
   def build([], acc), do: acc |> group_by_capability
   def build([set|sets], acc), do: build(sets, acc ++ [build(set)])
   defp build(set) do
-    filtered_areas = Enum.reject(set.areas, fn x -> x.area not in Map.keys(@valid_areas_and_skills) end)
-    case filtered_areas do
-      [] -> nil
-      _ -> dataset=filtered_areas
-        |> Enum.reduce([], fn area, acc -> [aggregate(area)] ++ acc end)
-        Map.new(capability: "DevOps", data: Enum.reverse(dataset))
-    end
+    dataset = @valid_areas_and_skills
+      |> Map.keys
+      |> Enum.reduce([], fn va, acc -> 
+        [set.areas |> Enum.find(fn s -> s.area == va end) |> aggregate] ++ acc end) 
+    Map.new(capability: "DevOps", data: Enum.reverse(dataset))
   end
 
+  defp aggregate(nil), do: 0
   defp aggregate(area) do
     area.skills
     |> Enum.reduce(0, fn x, acc -> 
@@ -32,7 +31,6 @@ defmodule OverviewBuilder do
 
   def group_by_capability(list) do
     list
-    |> Enum.reject(fn x -> is_nil(x) end)
     |> Enum.group_by(&(&1.capability))
     |> Enum.map(fn {k,v} -> %{capability: k, data: v |> Enum.map(&(&1.data)) |> transpose |> reduce } end)
   end
