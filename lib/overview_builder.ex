@@ -3,9 +3,9 @@ defmodule OverviewBuilder do
     "SourceControl" => ["Git", "Mercurial", "SVN", "CVS"],
     "Development" => [".Net", "Java", "Javascript/NodeJS", "Ruby", "Python"],
     "Scripting" => ["Bash", "Powershell", "Ruby", "Python"],
-    "IaC" => ["CloudFormation", "Chef", "Terraform", "Puppet"],
-    "Containers" => ["Openshift", "Kubernetes (standalone)", "AWS ecosystem (ECS, EKS, Fargate)", "Azure ecosystem (AKS, Service Fabric)"],
-    "Orchestrators" => ["Jenkins", "Azure DevOps pipelines", "AWS stack (CodeBuild, CodePipeline, CodeDeploy)", "Spinnaker", "TeamCity"]
+    "IaC" => ["Ansible", "CloudFormation", "Chef", "Terraform", "Puppet"],
+    "Containers" => ["Docker / Docker Swarm", "Openshift", "Kubernetes (standalone)", "AWS ecosystem (ECS, EKS, Fargate)", "Google Cloud ecosystem (Registry, GKE)", "Azure ecosystem (AKS, Service Fabric)"],
+    "Orchestrators" => ["Jenkins", "Azure DevOps pipelines", "AWS stack (CodeBuild, CodePipeline, CodeDeploy)", "Google Cloud Build", "Spinnaker", "TeamCity"]
   }
 
   def build([], acc), do: acc |> group_by_capability
