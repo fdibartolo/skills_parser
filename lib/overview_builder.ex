@@ -11,9 +11,10 @@ defmodule OverviewBuilder do
   def build([], acc), do: acc |> group_by_capability
   def build([set|sets], acc), do: build(sets, acc ++ [build(set)])
   defp build(set) do
-    case Enum.reject(set.areas, fn x -> x.area not in Map.keys(@valid_areas_and_skills) end) do
+    filtered_areas = Enum.reject(set.areas, fn x -> x.area not in Map.keys(@valid_areas_and_skills) end)
+    case filtered_areas do
       [] -> nil
-      _ -> dataset=set.areas
+      _ -> dataset=filtered_areas
         |> Enum.reduce([], fn area, acc -> [aggregate(area)] ++ acc end)
         Map.new(capability: "DevOps", data: Enum.reverse(dataset))
     end

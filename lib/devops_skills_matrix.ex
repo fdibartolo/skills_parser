@@ -7,11 +7,14 @@ defmodule DevopsSkillsMatrix do
   def process({:ok, path}), do: process(path)
 
   def process(path) do
-    path
-    |> Utils.get_files
-    |> parse([])
-    |> Poison.encode!
-    |> Utils.create_output_file
+    raw = path
+      |> Utils.get_files
+      |> parse([])
+    raw 
+      |> Poison.encode!
+      |> Utils.create_output_file
+
+    {:ok, raw}
   end
 
   def parse([], acc), do: acc

@@ -13,15 +13,21 @@ defmodule Mix.Tasks.Parser do
   ```
   The result of the parsing is dump into 'output.json' file
   """
-  def run([path]) do
+  def run([path|args]) do
     {:ok, _} = Application.ensure_all_started(:xlsxir)
 
     case File.dir? path do
       false -> IO.puts "#{red()}the given path '#{path}' is not valid.#{reset()}"
       true -> 
         IO.puts "#{yellow()}parsing files within '#{path}'...#{reset()}"
-        path |> DevopsSkillsMatrix.process
-        IO.puts "#{green()}done! find parsed results in 'output.json'.#{reset()}"
+        {_, raw} = path |> DevopsSkillsMatrix.process
+        if "-o" in args, do: raw |> build_overview_file
+        IO.puts "#{green()}done!#{reset()}"
     end
+  end
+
+  defp build_overview_file(list) do
+    IO.puts "#{yellow()}building overview json file...#{reset()}"
+    list |> OverviewBuilder.build([])
   end
 end
