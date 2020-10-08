@@ -6,18 +6,23 @@ defmodule OverviewBuilderTest do
   end
 
   test "should aggregate skills by area in single dataset" do
-    content = [%{areas: [%{area: "IaC", skills: [%{"s1" => 2}, %{"s2" => 3}]}, %{area: "Scripting", skills: [%{"s3" => 2}, %{"s4" => 1}]}]}]
+    content = [%{areas: [%{area: "IaC", skills: [%{"Chef" => 2}, %{"Puppet" => 3}]}, %{area: "Scripting", skills: [%{"Bash" => 2}, %{"Ruby" => 1}]}]}]
     assert OverviewBuilder.build(content,[]) == [%{capability: "DevOps", data: [5,3]}]
   end
 
   test "should aggregate skills by area in multiple dataset" do
-    content = [%{areas: [%{area: "IaC", skills: [%{"s1" => 2}, %{"s2" => 3}]}]}, %{areas: [%{area: "IaC", skills: [%{"s1" => 1}, %{"s2" => 1}]}]}]
+    content = [%{areas: [%{area: "IaC", skills: [%{"Chef" => 2}, %{"Puppet" => 3}]}]}, %{areas: [%{area: "IaC", skills: [%{"Chef" => 1}, %{"Puppet" => 1}]}]}]
     assert OverviewBuilder.build(content,[]) == [%{capability: "DevOps", data: [7]}]
   end
 
   test "should ignore unknown areas" do
-    content = [%{areas: [%{area: "IaC", skills: [%{"s1" => 2}, %{"s2" => 3}]}]}, %{areas: [%{area: "Testing", skills: [%{"s1" => 1}, %{"s2" => 1}]}]}]
+    content = [%{areas: [%{area: "IaC", skills: [%{"Chef" => 2}, %{"Puppet" => 3}]}]}, %{areas: [%{area: "Testing", skills: [%{"s1" => 1}, %{"s2" => 1}]}]}]
     assert OverviewBuilder.build(content,[]) == [%{capability: "DevOps", data: [5]}]
+  end
+
+  test "should ignore unknown skills" do
+    content = [%{areas: [%{area: "IaC", skills: [%{"Chef" => 2}, %{"s2" => 3}]}, %{area: "Scripting", skills: [%{"s1" => 1}, %{"Python" => 3}, %{"Ruby" => 1}]}]}]
+    assert OverviewBuilder.build(content,[]) == [%{capability: "DevOps", data: [2,4]}]
   end
 
   test "group single capability single dimension dataset" do
