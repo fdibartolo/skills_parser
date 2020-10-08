@@ -9,9 +9,12 @@ defmodule Mix.Tasks.Parser do
   Path is pass as a parameter to the task
   #Usage
   ```
-    mix parser "./path/to/files"
+    mix parser ./path/to/files [args]
   ```
   The result of the parsing is dump into 'output.json' file
+  if args are provided, will be dump into its corresponding file
+  args can be:
+    -o -> builds overview json file
   """
   def run([path|args]) do
     {:ok, _} = Application.ensure_all_started(:xlsxir)
@@ -21,6 +24,7 @@ defmodule Mix.Tasks.Parser do
       true -> 
         IO.puts "#{yellow()}parsing files within '#{path}'...#{reset()}"
         {_, raw} = path |> DevopsSkillsMatrix.process
+        raw |> Poison.encode! |> Utils.create_file("output.json")
         if "-o" in args, do: raw |> build_overview_file
         IO.puts "#{green()}done!#{reset()}"
     end
@@ -28,6 +32,6 @@ defmodule Mix.Tasks.Parser do
 
   defp build_overview_file(list) do
     IO.puts "#{yellow()}building overview json file...#{reset()}"
-    list |> OverviewBuilder.build([])
+    list |> OverviewBuilder.build([]) |> Poison.encode! |> Utils.create_file("overview.json")
   end
 end
