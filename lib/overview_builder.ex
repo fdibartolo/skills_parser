@@ -32,7 +32,7 @@ defmodule OverviewBuilder do
   def group_by_capability(list) do
     list
     |> Enum.group_by(&(&1.capability))
-    |> Enum.map(fn {k,v} -> %{capability: k, data: v |> Enum.map(&(&1.data)) |> transpose |> reduce } end)
+    |> Enum.map(fn {k,v} -> %{capability: k, data: v |> Enum.map(&(&1.data)) |> transpose |> reduce, total: Enum.count(v) } end)
   end
 
   defp transpose(list), do: list |> List.zip |> Enum.map(&Tuple.to_list/1)
