@@ -14,6 +14,13 @@ defmodule UtilsTest do
     end
   end
 
+  describe "get directories" do
+    test "should return not empty directories" do
+      assert Utils.get_dirs("./test/") |> Enum.member?("./test/data")
+      assert Utils.get_dirs("./config/") |> Enum.empty?
+    end
+  end
+
   describe "create output file" do
     test "should create file" do
       Utils.create_file("", "output.json")

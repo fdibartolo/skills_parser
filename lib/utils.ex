@@ -1,11 +1,12 @@
 defmodule Utils do
   def get_files(path, extension \\ ".xlsx") do
     path 
-    |> File.ls
-    |> elem(1) 
+    |> File.ls!
     |> Enum.filter(&String.ends_with?(&1, extension))
     |> Enum.map(&Path.join(path, &1))
   end
+
+  def get_dirs(path), do: path |> File.ls! |> Enum.map(&Path.join(path,&1)) |> Enum.filter(&File.dir?&1)    
 
   def create_file(content, name), do: File.write(name, content)
 
