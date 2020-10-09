@@ -8,7 +8,7 @@ defmodule OverviewBuilder do
     "SourceControl" => ["Git", "Mercurial", "SVN", "CVS"]
   }
 
-  def build([], acc), do: acc |> group_by_capability
+  def build([], acc), do: acc |> group_by_capability |> to_percentage
   def build([set|sets], acc), do: build(sets, acc ++ [build(set)])
   defp build(set) do
     dataset = @valid_areas_and_skills
@@ -37,4 +37,19 @@ defmodule OverviewBuilder do
 
   defp transpose(list), do: list |> List.zip |> Enum.map(&Tuple.to_list/1)
   defp reduce(list), do: list |> Enum.map(&Enum.sum/1)
+
+  def to_percentage(list) do
+    max = @valid_areas_and_skills 
+      |> Map.values |> Enum.reduce([], fn f, acc -> [Enum.count(f) * 4] ++ acc end) |> Enum.reverse
+    list |> to_percentage([], max)
+  end
+
+  defp to_percentage([], acc, _), do: acc
+  defp to_percentage([cap|list], acc, max), do: to_percentage list, (acc ++ [to_percentage(cap, max)]), max
+  defp to_percentage(cap, max) do
+    max_with_headcount = max |> Enum.map(fn m -> m * cap.total end)
+    p = [max_with_headcount] ++ [cap.data] 
+      |> transpose |> Enum.map(fn f -> Enum.at(f,1)/Enum.at(f,0)*100 |> round end)
+    Map.new(capability: cap.capability, data: p, total: cap.total)
+  end
 end
