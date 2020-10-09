@@ -3,7 +3,7 @@ defmodule DevopsSkillsMatrixTest do
 
   describe "process" do
     test "should use current dir when no path is given" do
-      assert DevopsSkillsMatrix.process() == {:ok, []}
+      assert DevopsSkillsMatrix.process() |> elem(0) == :ok
     end
   end
   

@@ -7,8 +7,8 @@ defmodule DevopsSkillsMatrix do
   def process({:ok, path}), do: process(path)
 
   def process(path) do
-    raw = path |> Utils.get_files |> parse([])
-    {:ok, raw}
+    raw = path |> Utils.get_dirs |> Enum.map(fn d -> d |> Utils.get_files |> parse([]) end)
+    {:ok, raw |> List.flatten}
   end
 
   def parse([], acc), do: acc
