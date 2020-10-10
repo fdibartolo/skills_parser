@@ -7,23 +7,23 @@ defmodule OverviewBuilderTest do
     end
 
     test "should aggregate skills by area in single dataset" do
-      content = [%{areas: [%{area: "IaC", skills: [%{"Chef" => 2}, %{"Puppet" => 3}]}, %{area: "Scripting", skills: [%{"Bash" => 2}, %{"Ruby" => 1}]}]}]
-      assert OverviewBuilder.build(content,[]) == [%{capability: "DevOps", data: [0,0,25,0,19,0], total: 1}]
+      content = [%{areas: [%{area: "IaC", skills: [%{"Chef" => 2}, %{"Puppet" => 3}]}, %{area: "Scripting", skills: [%{"Bash" => 2}, %{"Ruby" => 1}]}], capability: "A"}]
+      assert OverviewBuilder.build(content,[]) == [%{capability: "A", data: [0,0,25,0,19,0], total: 1}]
     end
 
     test "should aggregate skills by area in multiple dataset" do
-      content = [%{areas: [%{area: "IaC", skills: [%{"Chef" => 2}, %{"Puppet" => 3}]}]}, %{areas: [%{area: "IaC", skills: [%{"Chef" => 1}, %{"Puppet" => 1}]}]}]
-      assert OverviewBuilder.build(content,[]) == [%{capability: "DevOps", data: [0,0,18,0,0,0], total: 2}]
+      content = [%{areas: [%{area: "IaC", skills: [%{"Chef" => 2}, %{"Puppet" => 3}]}], capability: "A"}, %{areas: [%{area: "IaC", skills: [%{"Chef" => 1}, %{"Puppet" => 1}]}], capability: "A"}]
+      assert OverviewBuilder.build(content,[]) == [%{capability: "A", data: [0,0,18,0,0,0], total: 2}]
     end
 
     test "should ignore unknown areas" do
-      content = [%{areas: [%{area: "IaC", skills: [%{"Chef" => 2}, %{"Puppet" => 3}]}]}, %{areas: [%{area: "Testing", skills: [%{"s1" => 1}, %{"s2" => 1}]}]}]
-      assert OverviewBuilder.build(content,[]) == [%{capability: "DevOps", data: [0,0,13,0,0,0], total: 2}]
+      content = [%{areas: [%{area: "IaC", skills: [%{"Chef" => 2}, %{"Puppet" => 3}]}], capability: "A"}, %{areas: [%{area: "Testing", skills: [%{"s1" => 1}, %{"s2" => 1}]}], capability: "A"}]
+      assert OverviewBuilder.build(content,[]) == [%{capability: "A", data: [0,0,13,0,0,0], total: 2}]
     end
 
     test "should ignore unknown skills" do
-      content = [%{areas: [%{area: "IaC", skills: [%{"Chef" => 2}, %{"s2" => 3}]}, %{area: "Scripting", skills: [%{"s1" => 1}, %{"Python" => 3}, %{"Ruby" => 1}]}]}]
-      assert OverviewBuilder.build(content,[]) == [%{capability: "DevOps", data: [0,0,10,0,25,0], total: 1}]
+      content = [%{areas: [%{area: "IaC", skills: [%{"Chef" => 2}, %{"s2" => 3}]}, %{area: "Scripting", skills: [%{"s1" => 1}, %{"Python" => 3}, %{"Ruby" => 1}]}], capability: "A"}]
+      assert OverviewBuilder.build(content,[]) == [%{capability: "A", data: [0,0,10,0,25,0], total: 1}]
     end
   end
 

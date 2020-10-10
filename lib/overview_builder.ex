@@ -15,7 +15,7 @@ defmodule OverviewBuilder do
       |> Map.keys
       |> Enum.reduce([], fn va, acc -> 
         [set.areas |> Enum.find(fn s -> s.area == va end) |> aggregate] ++ acc end) 
-    Map.new(capability: "DevOps", data: Enum.reverse(dataset))
+    Map.new(capability: set.capability, data: Enum.reverse(dataset))
   end
 
   defp aggregate(nil), do: 0
