@@ -11,10 +11,11 @@ defmodule Mix.Tasks.Parser do
   ```
     mix parser ./path/to/files [args]
   ```
-  The result of the parsing is dump into 'output.json' file
-  if args are provided, will be dump into its corresponding file
+  The result of the parsing is dump into 'output.json' file. 
+  If args are provided, will be dump into its corresponding file: 
   args can be:
     -o -> builds overview json file
+    -d -> builds drilldown json file
   """
   def run([path|args]) do
     {:ok, _} = Application.ensure_all_started(:xlsxir)
@@ -26,6 +27,7 @@ defmodule Mix.Tasks.Parser do
         {_, raw} = path |> DevopsSkillsMatrix.process
         raw |> Poison.encode! |> Utils.create_file("output.json")
         if "-o" in args, do: raw |> build_overview_file
+        if "-d" in args, do: raw |> build_drilldown_file
         IO.puts "#{green()}done!#{reset()}"
     end
   end
@@ -33,5 +35,10 @@ defmodule Mix.Tasks.Parser do
   defp build_overview_file(list) do
     IO.puts "#{yellow()}building overview json file...#{reset()}"
     list |> OverviewBuilder.build([]) |> Poison.encode! |> Utils.create_file("overview.json")
+  end
+
+  defp build_drilldown_file(list) do
+    IO.puts "#{yellow()}building drilldown json file...#{reset()}"
+    list |> DrilldownBuilder.build([]) |> Poison.encode! |> Utils.create_file("drilldown.json")
   end
 end
