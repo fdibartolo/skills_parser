@@ -3,17 +3,17 @@ defmodule DrilldownBuilderTest do
 
   describe "add experience" do
     test "should add to second level (Familiarizado)" do
-      assert DrilldownBuilder.add_experience(1, [3,1,5,7]) == [3,2,5,7]
+      assert DrilldownBuilder.add_experience(2, [3,1,5,7]) == [3,2,5,7]
     end
 
     test "should add to fourth level (Experto)" do
-      assert DrilldownBuilder.add_experience(3, [3,1,5,7]) == [3,1,5,8]
+      assert DrilldownBuilder.add_experience(4, [3,1,5,7]) == [3,1,5,8]
     end
   end
 
   describe "group skills" do
     test "should merge skills experience" do
-      assert DrilldownBuilder.group_skills("IaC", [%{"Ansible" => 1}, %{"Chef" => 2}, %{"Puppet" => 3}]) == %{
+      assert DrilldownBuilder.group_skills("IaC", [%{"Ansible" => 2}, %{"Chef" => 3}, %{"Puppet" => 4}]) == %{
         "Ansible" => [0,1,0,0],
         "CloudFormation" => [1,0,0,0],
         "Chef" => [0,0,1,0],
@@ -25,7 +25,7 @@ defmodule DrilldownBuilderTest do
 
   describe "aggregate areas" do
     test "should merge data for a single dataset" do
-      assert DrilldownBuilder.aggregate_areas(%{area: "IaC", skills: [%{"Chef" => 2}, %{"Puppet" => 3}]}) == %{
+      assert DrilldownBuilder.aggregate_areas(%{area: "IaC", skills: [%{"Chef" => 3}, %{"Puppet" => 4}]}) == %{
         name: "Infra as Code",
         labels: ["Ansible","Chef","CloudFormation","Puppet","Terraform"], #sorted alphabetically!!
         dataset: [
@@ -39,9 +39,9 @@ defmodule DrilldownBuilderTest do
 
     test "should merge data for a multiple dataset" do
       input = [
-        %{area: "IaC", skills: [%{"Chef" => 3}, %{"Puppet" => 3}]},
-        %{area: "Scripting", skills: [%{"Python" => 1}, %{"Ruby" => 3}]},
-        %{area: "SourceControl", skills: [%{"Git" => 1}]}
+        %{area: "IaC", skills: [%{"Chef" => 4}, %{"Puppet" => 4}]},
+        %{area: "Scripting", skills: [%{"Python" => 2}, %{"Ruby" => 4}]},
+        %{area: "SourceControl", skills: [%{"Git" => 2}]}
       ]
       assert DrilldownBuilder.aggregate_areas(input, []) == [
         %{
@@ -102,7 +102,7 @@ defmodule DrilldownBuilderTest do
     end
 
     test "should aggregate skills by area in single dataset" do
-      input = [%{areas: [%{area: "IaC", skills: [%{"Ansible" => 1}, %{"Chef" => 2}, %{"Puppet" => 3}]}], capability: "A", name: "foo"}]
+      input = [%{areas: [%{area: "IaC", skills: [%{"Ansible" => 2}, %{"Chef" => 3}, %{"Puppet" => 4}]}], capability: "A", name: "foo"}]
       assert DrilldownBuilder.build(input,[]) |> List.first
         |> Map.fetch!(:categories) |> Enum.find(&(&1.name == "Infra as Code")) == %{
           name: "Infra as Code",

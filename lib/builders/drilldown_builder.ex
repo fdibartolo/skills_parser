@@ -50,10 +50,10 @@ defmodule DrilldownBuilder do
 
   def add_experience(experience, acc) do
     sum = case experience do
-      0 -> [1,0,0,0] 
-      1 -> [0,1,0,0]
-      2 -> [0,0,1,0]
-      3 -> [0,0,0,1]
+      2 -> [0,1,0,0]
+      3 -> [0,0,1,0]
+      4 -> [0,0,0,1]
+      _ -> [1,0,0,0] # 0 or 1
     end
     [sum] ++ [acc] |> Utils.transpose |> Utils.reduce
   end
