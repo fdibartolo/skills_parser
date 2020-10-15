@@ -45,4 +45,13 @@ defmodule UtilsTest do
       assert Utils.purge(["a,1", "c,", ",2", "b", "x,y,3"]) == ["a,1", "x,y,3"]
     end
   end
+
+  describe "transpose and reduce list of arrays" do
+    test "should transpose!" do
+      assert Utils.transpose([[1,2,3],[4,5,6]]) == [[1,4],[2,5],[3,6]]
+    end
+    test "should reduce!" do
+      assert Utils.reduce([[1,4],[2,5],[3,6]]) == [5,7,9]
+    end
+  end
 end

@@ -16,4 +16,7 @@ defmodule Utils do
     |> Enum.reject(&(&1 == ""))
     |> Enum.reject(&!String.match?(&1, ~r/.,\d/))
   end
+
+  def transpose(list), do: list |> List.zip |> Enum.map(&Tuple.to_list/1)
+  def reduce(list), do: list |> Enum.map(&Enum.sum/1)
 end
