@@ -1,4 +1,15 @@
 defmodule Utils do
+  @valid_areas_and_skills %{
+    "Containers" => ["Docker / Docker Swarm", "Openshift", "Kubernetes (standalone)", "AWS ecosystem (ECS, EKS, Fargate)", "Google Cloud ecosystem (Registry, GKE)", "Azure ecosystem (AKS, Service Fabric)"],
+    "Development" => [".Net", "Java", "Javascript/NodeJS", "Ruby", "Python"],
+    "IaC" => ["Ansible", "CloudFormation", "Chef", "Terraform", "Puppet"],
+    "Orchestrators" => ["Jenkins", "Azure DevOps pipelines", "AWS stack (CodeBuild, CodePipeline, CodeDeploy)", "Google Cloud Build", "Spinnaker", "TeamCity"],
+    "Scripting" => ["Bash", "Powershell", "Ruby", "Python"],
+    "SourceControl" => ["Git", "Mercurial", "SVN", "CVS"]
+  }
+
+  def valid_areas_and_skills, do: @valid_areas_and_skills
+    
   def get_files(path, extension \\ ".xlsx") do
     path 
     |> File.ls!

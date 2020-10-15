@@ -1,17 +1,8 @@
 defmodule OverviewBuilder do
-  @valid_areas_and_skills %{
-    "Containers" => ["Docker / Docker Swarm", "Openshift", "Kubernetes (standalone)", "AWS ecosystem (ECS, EKS, Fargate)", "Google Cloud ecosystem (Registry, GKE)", "Azure ecosystem (AKS, Service Fabric)"],
-    "Development" => [".Net", "Java", "Javascript/NodeJS", "Ruby", "Python"],
-    "IaC" => ["Ansible", "CloudFormation", "Chef", "Terraform", "Puppet"],
-    "Orchestrators" => ["Jenkins", "Azure DevOps pipelines", "AWS stack (CodeBuild, CodePipeline, CodeDeploy)", "Google Cloud Build", "Spinnaker", "TeamCity"],
-    "Scripting" => ["Bash", "Powershell", "Ruby", "Python"],
-    "SourceControl" => ["Git", "Mercurial", "SVN", "CVS"]
-  }
-
   def build([], acc), do: acc |> group_by_capability |> to_percentage
   def build([set|sets], acc), do: build(sets, acc ++ [build(set)])
   defp build(set) do
-    dataset = @valid_areas_and_skills
+    dataset = Utils.valid_areas_and_skills
       |> Map.keys
       |> Enum.reduce([], fn va, acc -> 
         [set.areas |> Enum.find(fn s -> s.area == va end) |> aggregate] ++ acc end) 
@@ -22,7 +13,7 @@ defmodule OverviewBuilder do
   defp aggregate(area) do
     area.skills
     |> Enum.reduce(0, fn x, acc -> 
-      case (Map.keys(x) |> List.first) in Map.fetch!(@valid_areas_and_skills, area.area) do
+      case (Map.keys(x) |> List.first) in Map.fetch!(Utils.valid_areas_and_skills, area.area) do
         true -> (Map.values(x) |> List.first) + acc
         _ -> acc
       end
@@ -37,7 +28,7 @@ defmodule OverviewBuilder do
   end
 
   def to_percentage(list) do
-    max = @valid_areas_and_skills 
+    max = Utils.valid_areas_and_skills 
       |> Map.values |> Enum.reduce([], fn f, acc -> [Enum.count(f) * 4] ++ acc end) |> Enum.reverse
     list |> to_percentage([], max)
   end

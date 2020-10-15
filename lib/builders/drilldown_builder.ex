@@ -1,15 +1,5 @@
 defmodule DrilldownBuilder do
-  @valid_areas_and_skills %{
-    "Containers" => ["Docker / Docker Swarm", "Openshift", "Kubernetes (standalone)", "AWS ecosystem (ECS, EKS, Fargate)", "Google Cloud ecosystem (Registry, GKE)", "Azure ecosystem (AKS, Service Fabric)"],
-    "Development" => [".Net", "Java", "Javascript/NodeJS", "Ruby", "Python"],
-    "IaC" => ["Ansible", "CloudFormation", "Chef", "Terraform", "Puppet"],
-    "Orchestrators" => ["Jenkins", "Azure DevOps pipelines", "AWS stack (CodeBuild, CodePipeline, CodeDeploy)", "Google Cloud Build", "Spinnaker", "TeamCity"],
-    "Scripting" => ["Bash", "Powershell", "Ruby", "Python"],
-    "SourceControl" => ["Git", "Mercurial", "SVN", "CVS"]
-  }
-
   @experiences ~w(Desconozco Familiarizado Usado Experto)
-
   @pretty_print %{ "IaC" => "Infra as Code", "SourceControl" => "Source Control" }
 
   def build([], acc), do: acc |> group_by_capability
@@ -20,7 +10,7 @@ defmodule DrilldownBuilder do
   end
 
   def normalize(set) do
-    normalized_areas = @valid_areas_and_skills
+    normalized_areas = Utils.valid_areas_and_skills
       |> Map.keys
       |> Enum.reduce([], fn a, acc -> acc ++ [find(a, Enum.find(set.areas, fn ar -> ar.area == a end))] end) 
     Map.new(name: set.name, capability: set.capability, areas: normalized_areas)
@@ -41,14 +31,14 @@ defmodule DrilldownBuilder do
 
     Map.new(
       name: @pretty_print |> Map.get(area, area),
-      labels: @valid_areas_and_skills |> Map.get(area) |> Enum.sort, 
+      labels: Utils.valid_areas_and_skills |> Map.get(area) |> Enum.sort, 
       dataset: dataset
     )
   end
 
   def group_skills(area, skills) do
     skills_to_map = skills |> Enum.reduce(%{}, fn x, acc -> Map.merge(x, acc) end)
-    skills_name = @valid_areas_and_skills |> Map.get(area)
+    skills_name = Utils.valid_areas_and_skills |> Map.get(area)
     experience_by_skill = skills_name |> Enum.reduce([], fn f, acc -> [Map.get(skills_to_map,f,0)] ++ acc end) |> Enum.reverse
     accumulator = skills_name |> Enum.reduce(%{}, fn x, a -> Map.merge(%{x => [0,0,0,0]}, a) end)
 
