@@ -54,4 +54,11 @@ defmodule UtilsTest do
       assert Utils.reduce([[1,4],[2,5],[3,6]]) == [5,7,9]
     end
   end
+
+  describe "shorten list" do
+    test "should keep only the first word of each element" do
+      assert Utils.shorten(["a b", "aab ab", "c", "dd e f"]) == ["a", "aab", "c", "dd"]
+    end
+  end
+
 end

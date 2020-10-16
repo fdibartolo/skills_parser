@@ -30,4 +30,5 @@ defmodule Utils do
 
   def transpose(list), do: list |> List.zip |> Enum.map(&Tuple.to_list/1)
   def reduce(list), do: list |> Enum.map(&Enum.sum/1)
+  def shorten(list), do: list |> Enum.map(&(String.split(&1)) |> List.first)
 end
