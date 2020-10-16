@@ -78,10 +78,10 @@ defmodule DrilldownBuilder do
     |> Enum.group_by(&(&1.label))
     |> Enum.map(fn {l,d} -> {l, d |> Enum.map(&(&1.data)) |> Utils.transpose |> Utils.reduce} end)
     |> Enum.map(fn {l,d} -> %{data: d, label: l} end)
-    |> sort_experiences
+    |> sort_by_experience
 
     {area, datasets, list |> List.first |> Map.fetch!(:labels)}
   end
 
-  def sort_experiences(set), do: @experiences |> Enum.map(fn e -> Enum.find(set, &(&1.label == e)) end)
+  def sort_by_experience(set), do: @experiences |> Enum.map(fn e -> Enum.find(set, &(&1.label == e)) end)
 end
