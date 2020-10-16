@@ -143,4 +143,16 @@ defmodule DrilldownBuilderTest do
         ]}
     end
   end
+
+  describe "sort experiences" do
+    test "should be alphabetically" do
+      dataset = [%{data: [1], label: "Desconozco"},%{data: [4], label: "Experto"},%{data: [2], label: "Familiarizado"},%{data: [3], label: "Usado"}]
+      assert DrilldownBuilder.sort_experiences(dataset) == [
+        %{data: [1], label: "Desconozco"},
+        %{data: [2], label: "Familiarizado"},
+        %{data: [3], label: "Usado"},
+        %{data: [4], label: "Experto"}
+      ]
+    end
+  end
 end
