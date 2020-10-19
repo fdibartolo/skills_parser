@@ -17,4 +17,11 @@ defmodule ToolsBuilderTest do
       assert ToolsBuilder.build_tools(list) == ["bar - t1", "foo - t1", "foo - t2"]
     end
   end
+
+  describe "list of labels" do
+    test "should include all capabalities" do
+      sets = [%{name: "foo", capability: "A", areas: []}, %{name: "bar", capability: "A", areas: []}, %{name: "baz", capability: "B", areas: []}]
+      assert ToolsBuilder.build_labels(sets) == ["A", "B"]
+    end
+  end
 end
