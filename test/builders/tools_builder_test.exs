@@ -12,8 +12,8 @@ defmodule ToolsBuilderTest do
 
     test "should group people count by tool for single capability" do
       sets = [%{areas: [%{area: "IaC", skills: [%{"Chef" => 2}, %{"Puppet" => 3}]}], capability: "A"}]
-      assert ToolsBuilder.build(sets) |> Map.fetch!(:dataset) == [
-        %{
+      result = ToolsBuilder.build(sets) |> Map.fetch!(:dataset)
+      assert result |> Enum.member?(%{
           tools: "IaC - Chef",
           people: [
             %{title: "Desconozco", data: [0]},
@@ -21,8 +21,8 @@ defmodule ToolsBuilderTest do
             %{title: "Familiarizado", data: [1]},
             %{title: "Usado", data: [0]}
           ]
-        },
-        %{
+        })
+      assert result |> Enum.member?(%{
           tools: "IaC - Puppet",
           people: [
             %{title: "Desconozco", data: [0]},
@@ -30,14 +30,13 @@ defmodule ToolsBuilderTest do
             %{title: "Familiarizado", data: [0]},
             %{title: "Usado", data: [1]}
           ]
-        }
-      ]
+        })
     end
 
     test "should group people count by tool for multiple capability" do
       sets = [%{areas: [%{area: "IaC", skills: [%{"Chef" => 2}, %{"Puppet" => 1}]}], capability: "A"},%{areas: [%{area: "IaC", skills: [%{"Chef" => 2}, %{"Puppet" => 3}]}], capability: "A"},%{areas: [%{area: "IaC", skills: [%{"Chef" => 4}, %{"Puppet" => 3}]}], capability: "B"}]
-      assert ToolsBuilder.build(sets)  |> Map.fetch!(:dataset) == [
-        %{
+      result =  ToolsBuilder.build(sets)  |> Map.fetch!(:dataset)
+      assert result |> Enum.member?(%{
           tools: "IaC - Chef",
           people: [
             %{title: "Desconozco", data: [0,0]},
@@ -45,8 +44,8 @@ defmodule ToolsBuilderTest do
             %{title: "Familiarizado", data: [2,0]},
             %{title: "Usado", data: [0,0]}
           ]
-        },
-        %{
+        })
+      assert result |> Enum.member?(%{
           tools: "IaC - Puppet",
           people: [
             %{title: "Desconozco", data: [1,0]},
@@ -54,8 +53,7 @@ defmodule ToolsBuilderTest do
             %{title: "Familiarizado", data: [0,0]},
             %{title: "Usado", data: [1,1]}
           ]
-        }
-      ]
+        })
     end
   end
 
@@ -91,5 +89,14 @@ defmodule ToolsBuilderTest do
       sets = [%{name: "foo", capability: "A", areas: []}, %{name: "bar", capability: "A", areas: []}, %{name: "baz", capability: "B", areas: []}]
       assert ToolsBuilder.build_labels(sets) == ["A", "B"]
     end
+  end
+
+  describe "unlisted skills" do
+    test "should be merged as 'Desconozco'" do
+      list = [%{data: [0,1,0,0], skill: "IaC - Chef"},%{data: [1,0,1,0], skill: "IaC - Puppet"}]
+      result = ToolsBuilder.merge_unlisted_skills(list, 3)
+      assert result |> Enum.member?(%{data: [2,1,0,0], skill: "IaC - Chef"})
+      assert result |> Enum.member?(%{data: [2,0,1,0], skill: "IaC - Puppet"})
+    end    
   end
 end

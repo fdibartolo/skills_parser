@@ -17,6 +17,7 @@ defmodule ToolsBuilder do
     |> Enum.group_by(&(&1.area))
     |> Enum.map(fn {a,s} -> %{area: a, skills: Enum.reduce(s,[],&(&2 ++ &1.skills)) |> List.flatten} end)
     |> Enum.map(&(aggregate_people(&1.skills, &1.area, []))) |> List.flatten
+    |> merge_unlisted_skills(cap |> Enum.count)
     |> Enum.map(&(Map.new(tools: &1.skill, people: &1.data |> Enum.with_index |> Enum.map(fn {v,i} -> %{data: List.wrap(v), title: Enum.at(@experiences,i)} end))))
   end
 
@@ -51,6 +52,19 @@ defmodule ToolsBuilder do
     list
     |> Enum.group_by(&(&1.skill))
     |> Enum.map(fn {k,v} -> %{skill: k, data: Enum.map(v, &(&1.data)) |> Utils.transpose |> Utils.reduce} end)
+  end
+
+  def merge_unlisted_skills(list, count) do
+    Utils.valid_areas_and_skills
+    |> Enum.reduce([], fn {k,v}, acc -> acc ++ [Enum.map(v, &("#{k} - #{&1}"))] end)
+    |> List.flatten 
+    |> Enum.map(fn s -> merge_unlisted_skill(s, count, list |> Enum.find(&(&1.skill == s))) end)
+  end
+
+  defp merge_unlisted_skill(skill, count, nil), do: Map.new(skill: skill, data: [count,0,0,0])
+  defp merge_unlisted_skill(skill, count, skillset) do
+    responses = skillset.data |> Enum.sum
+    Map.new(skill: skill, data: [[count-responses,0,0,0]] ++ [skillset.data] |> Utils.transpose |> Utils.reduce)
   end
 
   def build_tools(list) do
