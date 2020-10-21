@@ -2,9 +2,10 @@ defmodule ToolsBuilder do
   @experiences ~w(Desconozco Familiarizado Usado Experto)
 
   def build(sets) do
-    t = Utils.valid_areas_and_skills |> build_tools
+    d = sets |> build_dataset
+    t = d |> build_tools
     l = sets |> build_labels
-    Map.new(tools: t, labels: l, dataset: build_dataset(sets))
+    Map.new(tools: t, labels: l, dataset: d)
   end
 
   def build_dataset(sets), do: sets |> Enum.group_by(&(&1.capability)) |> Map.values |> aggregate_cap([])
@@ -71,11 +72,7 @@ defmodule ToolsBuilder do
     Map.new(skill: skill, data: [[count-responses,0,0,0]] ++ [skillset.data] |> Utils.transpose |> Utils.reduce)
   end
 
-  def build_tools(list) do
-    list
-    |> Enum.reduce([], fn {k,v}, acc -> acc ++ [Enum.map(v, &("#{k} - #{&1}"))] end)
-    |> List.flatten 
-  end
+  def build_tools(list), do: list |> Enum.map(&(&1.tool))
 
   def build_labels(sets), do: sets |> Enum.map(&(&1.capability)) |> Enum.uniq
 end

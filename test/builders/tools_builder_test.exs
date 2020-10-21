@@ -102,8 +102,8 @@ defmodule ToolsBuilderTest do
 
   describe "list of tools" do
     test "should combine category and list into single list" do
-      list = %{"foo" => ~w(t1 t2), "bar" => ~w(t1)}
-      assert ToolsBuilder.build_tools(list) == ["bar - t1", "foo - t1", "foo - t2"]
+      list = [%{tool: "A1 - S1",people: []},%{tool: "A2 - S2",people: []},%{tool: "A3 - S3",people: []}]
+      assert ToolsBuilder.build_tools(list) == ["A1 - S1", "A2 - S2", "A3 - S3"]
     end
   end
 
