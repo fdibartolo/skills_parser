@@ -55,10 +55,14 @@ defmodule ToolsBuilder do
   end
 
   def merge_unlisted_skills(list, count) do
-    Utils.valid_areas_and_skills
+    default_skills=Utils.valid_areas_and_skills
     |> Enum.reduce([], fn {k,v}, acc -> acc ++ [Enum.map(v, &("#{k} - #{&1}"))] end)
     |> List.flatten 
     |> Enum.map(fn s -> merge_unlisted_skill(s, count, list |> Enum.find(&(&1.skill == s))) end)
+
+    Enum.map(list,&(&1.skill)) -- Enum.map(default_skills,&(&1.skill))
+    |> Enum.map(&(Enum.find(list,fn f -> f.skill == &1 end)))
+    |> Enum.concat(default_skills)
   end
 
   defp merge_unlisted_skill(skill, count, nil), do: Map.new(skill: skill, data: [count,0,0,0])

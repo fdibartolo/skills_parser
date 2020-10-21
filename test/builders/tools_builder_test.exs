@@ -55,6 +55,29 @@ defmodule ToolsBuilderTest do
           ]
         })
     end
+
+    test "should include manually added skills as well" do
+      sets = [%{areas: [%{area: "IaC", skills: [%{"Chef" => 2}, %{"Other" => 3}]}], capability: "A"}]
+      result = ToolsBuilder.build(sets) |> Map.fetch!(:dataset)
+      assert result |> Enum.member?(%{
+          tool: "IaC - Chef",
+          people: [
+            %{title: "Desconozco", data: [0]},
+            %{title: "Experto", data: [0]},
+            %{title: "Familiarizado", data: [1]},
+            %{title: "Usado", data: [0]}
+          ]
+        })
+      assert result |> Enum.member?(%{
+          tool: "IaC - Other",
+          people: [
+            %{title: "Desconozco", data: [0]},
+            %{title: "Experto", data: [0]},
+            %{title: "Familiarizado", data: [0]},
+            %{title: "Usado", data: [1]}
+          ]
+        })
+    end
   end
 
   describe "aggretate people" do
