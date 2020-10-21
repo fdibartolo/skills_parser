@@ -14,7 +14,7 @@ defmodule ToolsBuilderTest do
       sets = [%{areas: [%{area: "IaC", skills: [%{"Chef" => 2}, %{"Puppet" => 3}]}], capability: "A"}]
       result = ToolsBuilder.build(sets) |> Map.fetch!(:dataset)
       assert result |> Enum.member?(%{
-          tools: "IaC - Chef",
+          tool: "IaC - Chef",
           people: [
             %{title: "Desconozco", data: [0]},
             %{title: "Experto", data: [0]},
@@ -23,7 +23,7 @@ defmodule ToolsBuilderTest do
           ]
         })
       assert result |> Enum.member?(%{
-          tools: "IaC - Puppet",
+          tool: "IaC - Puppet",
           people: [
             %{title: "Desconozco", data: [0]},
             %{title: "Experto", data: [0]},
@@ -37,7 +37,7 @@ defmodule ToolsBuilderTest do
       sets = [%{areas: [%{area: "IaC", skills: [%{"Chef" => 2}, %{"Puppet" => 1}]}], capability: "A"},%{areas: [%{area: "IaC", skills: [%{"Chef" => 2}, %{"Puppet" => 3}]}], capability: "A"},%{areas: [%{area: "IaC", skills: [%{"Chef" => 4}, %{"Puppet" => 3}]}], capability: "B"}]
       result =  ToolsBuilder.build(sets)  |> Map.fetch!(:dataset)
       assert result |> Enum.member?(%{
-          tools: "IaC - Chef",
+          tool: "IaC - Chef",
           people: [
             %{title: "Desconozco", data: [0,0]},
             %{title: "Experto", data: [0,1]},
@@ -46,7 +46,7 @@ defmodule ToolsBuilderTest do
           ]
         })
       assert result |> Enum.member?(%{
-          tools: "IaC - Puppet",
+          tool: "IaC - Puppet",
           people: [
             %{title: "Desconozco", data: [1,0]},
             %{title: "Experto", data: [0,0]},

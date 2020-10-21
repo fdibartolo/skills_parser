@@ -24,7 +24,7 @@ defmodule ToolsBuilder do
   def group_by_tool(list) do
     list
     |> Enum.group_by(&(&1.tools)) 
-    |> Enum.map(fn {t,p} -> %{tools: t, people: p |> Enum.map(&(&1.people)) |> merge} end)
+    |> Enum.map(fn {t,p} -> %{tool: t, people: p |> Enum.map(&(&1.people)) |> merge} end)
   end
 
   defp merge(list) do
