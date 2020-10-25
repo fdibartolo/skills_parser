@@ -16,6 +16,7 @@ defmodule Mix.Tasks.Parser do
   ```
   args can be:
 
+    -b -> backup any existing json files
     -o -> builds overview json file
     -d -> builds drilldown json file
     -t -> builds tools json file
@@ -27,6 +28,7 @@ defmodule Mix.Tasks.Parser do
     case File.dir? path do
       false -> IO.puts "#{red()}the given path '#{path}' is not valid.#{reset()}"
       true -> 
+        if "-b" in args, do: zip_json_files()
         IO.puts "#{yellow()}parsing files within '#{path}'...#{reset()}"
         {_, raw} = path |> DevopsSkillsMatrix.process
         raw |> Poison.encode! |> Utils.create_file("output.json")
@@ -50,5 +52,21 @@ defmodule Mix.Tasks.Parser do
   defp build_tools_file(list) do
     IO.puts "#{yellow()}building tools json file...#{reset()}"
     list |> ToolsBuilder.build |> Poison.encode! |> Utils.create_file("tools.json")
+  end
+
+  defp zip_json_files do
+    IO.puts "#{yellow()}backing up existing jsons file...#{reset()}"
+    File.mkdir! "archive"
+    File.cwd!
+    |> File.ls!
+    |> Enum.filter(&String.ends_with?(&1, ".json"))
+    |> Enum.each(&File.rename(&1, "archive/#{&1}"))
+    File.cd! "archive"
+    timestamp = DateTime.utc_now |> DateTime.to_string
+    {_, f} = :zip.create("json_files_#{timestamp}.zip", File.ls! |> Enum.map(&(String.to_charlist(&1))))
+    IO.puts "#{green()}json files backed up into '#{f}'#{reset()}"
+    File.rename "json_files_#{timestamp}.zip", "../json_files_#{timestamp}.zip"
+    File.cd! ".."
+    File.rm_rf! "archive"
   end
 end
