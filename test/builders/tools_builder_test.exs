@@ -112,6 +112,10 @@ defmodule ToolsBuilderTest do
       sets = [%{name: "foo", capability: "A", areas: []}, %{name: "bar", capability: "A", areas: []}, %{name: "baz", capability: "B", areas: []}]
       assert ToolsBuilder.build_labels(sets) == ["A", "B"]
     end
+    test "should be sorted alphabetically" do
+      sets = [%{name: "foo", capability: "C", areas: []}, %{name: "bar", capability: "A", areas: []}, %{name: "baz", capability: "B", areas: []}]
+      assert ToolsBuilder.build_labels(sets) == ["A", "B", "C"]
+    end
   end
 
   describe "unlisted skills" do

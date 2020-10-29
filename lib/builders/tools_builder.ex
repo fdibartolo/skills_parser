@@ -74,5 +74,5 @@ defmodule ToolsBuilder do
 
   def build_tools(list), do: list |> Enum.map(&(&1.tool))
 
-  def build_labels(sets), do: sets |> Enum.map(&(&1.capability)) |> Enum.uniq
+  def build_labels(sets), do: sets |> Enum.map(&(&1.capability)) |> Enum.uniq |> Enum.sort
 end
